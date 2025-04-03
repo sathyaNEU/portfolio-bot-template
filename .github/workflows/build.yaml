@@ -1,0 +1,47 @@
+name: Deploy Hugo Site to Netlify
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Hugo site to Netlify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.17.0'  # Match the Node version from netlify.toml
+
+      - name: Install NPM dependencies
+        run: npm install  # Install any Node.js dependencies (needed for Hugo modules)
+
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
+
+      - name: Check if Netlify site exists
+        id: check-site
+        run: |
+          SITE_NAME=${{ secrets.NETLIFY_SITE_NAME }}
+          SITE_EXISTS=$(netlify api listSites --auth $NETLIFY_AUTH_TOKEN | jq -r '.[].name' | grep -w "$SITE_NAME" || echo "notfound")
+
+          if [[ "$SITE_EXISTS" == "notfound" ]]; then
+            echo "Site $SITE_NAME does not exist. Creating..."
+            netlify sites:create --name $SITE_NAME --auth $NETLIFY_AUTH_TOKEN
+          else
+            echo "Site $SITE_NAME already exists."
+          fi
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
+      - name: Deploy to Netlify
+        run: |
+          netlify deploy --prod --dir=public --message "Deployed from GitHub Actions"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
