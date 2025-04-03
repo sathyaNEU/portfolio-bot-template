@@ -1,5 +1,5 @@
 # some information about you
-name: "John Doe - CI/CD"
+name: "John Doe"
 nickname: "John"
 # greeting message before your name. it will default to "Hi! I am" if not provided
 greeting: "Hi, I am"
@@ -14,8 +14,8 @@ contactInfo:
 
 # some summary about what you do
 summary:
-  - I am a Developer 1
-  - I am a Devops 2 
-  - I love servers 3 
-  - I work on open-source projects 4 
-  - I love to work with some fun projects 5
+  - I am a Developer
+  - I am a Devops 
+  - I love servers
+  - I work on open-source projects
+  - I love to work with some fun projects
