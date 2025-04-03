@@ -25,9 +25,6 @@ jobs:
       - name: Install Netlify CLI
         run: npm install -g netlify-cli
 
-      - name: Netlify build
-        run: netlify build
-
       - name: Check if Netlify site exists
         id: check-site
         run: |
