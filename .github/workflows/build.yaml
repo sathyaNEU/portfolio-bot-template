@@ -46,7 +46,7 @@ jobs:
 
       - name: Deploy to Netlify
         run: |
-          netflify build
+          netlify build
           netlify deploy --prod --dir=public --message "Deployed from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
