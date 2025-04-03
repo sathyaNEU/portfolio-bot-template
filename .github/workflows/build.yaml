@@ -25,6 +25,15 @@ jobs:
       - name: Install Netlify CLI
         run: npm install -g netlify-cli
 
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3.0.0
+        with:
+          hugo-version: '0.133.1'
+          extended: true
+
+      - name: Build
+        run: hugo --gc --minify
+
       - name: Check if Netlify site exists
         id: check-site
         run: |
@@ -45,8 +54,6 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Deploy to Netlify
-        run: |
-          netlify build
-          netlify deploy --prod --dir=public --message "Deployed from GitHub Actions"
+        run: netlify deploy --prod --dir=public --message "Deployed from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
