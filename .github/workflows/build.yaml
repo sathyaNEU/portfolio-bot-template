@@ -39,11 +39,6 @@ jobs:
 
       - name: Build
         run: hugo --gc --minify
-      
-      - name: Link Netlify Site
-        run: netlify link --name ${{ secrets.NETLIFY_SITE_NAME }}
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Check if Netlify site exists
         id: check-site
@@ -59,6 +54,11 @@ jobs:
           else
             echo "Site $SITE_NAME already exists."
           fi
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          
+      - name: Link Netlify Site
+        run: netlify link --name ${{ secrets.NETLIFY_SITE_NAME }}
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
