@@ -25,6 +25,9 @@ jobs:
       - name: Install Netlify CLI
         run: npm install -g netlify-cli
 
+      - name: Netlify build
+        run: netlify build
+
       - name: Check if Netlify site exists
         id: check-site
         run: |
@@ -46,6 +49,7 @@ jobs:
 
       - name: Deploy to Netlify
         run: |
+          netflify build
           netlify deploy --prod --dir=public --message "Deployed from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
