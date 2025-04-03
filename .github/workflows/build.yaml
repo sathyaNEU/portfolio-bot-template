@@ -31,22 +31,31 @@ jobs:
           hugo-version: '0.133.1'
           extended: true
 
+      - name: Prepare Hugo Modules
+        run: |
+          hugo mod tidy
+          hugo mod npm pack
+          npm install
+
       - name: Build
         run: hugo --gc --minify
+      
+      - name: Link Netlify Site
+        run: netlify link --name ${{ secrets.NETLIFY_SITE_NAME }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Check if Netlify site exists
         id: check-site
         run: |
           SITE_NAME=${{ secrets.NETLIFY_SITE_NAME }}
-          TEAM_ID=${{ secrets.NETLIFY_TEAM_ID }}  # Optional: You can set this in GitHub secrets if needed
 
           # Check if site exists, and if not, create it
           SITE_EXISTS=$(netlify api listSites --auth $NETLIFY_AUTH_TOKEN | jq -r '.[].name' | grep -w "$SITE_NAME" || echo "notfound")
 
           if [[ "$SITE_EXISTS" == "notfound" ]]; then
             echo "Site $SITE_NAME does not exist. Creating..."
-            # Pass the team and site name directly to avoid interactive prompts
-            netlify sites:create --name $SITE_NAME --auth $NETLIFY_AUTH_TOKEN --account-slug sathyaneu
+            netlify sites:create --name $SITE_NAME --auth $NETLIFY_AUTH_TOKEN
           else
             echo "Site $SITE_NAME already exists."
           fi
